@@ -31,6 +31,10 @@ bd sync               # Sync with git
 5. **Clean up** - Clear stashes, prune remote branches
 6. **Verify** - All changes committed AND pushed
 7. **Hand off** - Provide context for next session
+8. **Delete worktree** (after PR merged and task closed) - Remove the worktree:
+   ```bash
+   bd worktree remove <task-id>  # or: git worktree remove <path>
+   ```
 
 **CRITICAL RULES:**
 - Work is NOT complete until `git push` succeeds

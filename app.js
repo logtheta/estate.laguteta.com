@@ -91,23 +91,25 @@ function selectProperty(propertyId) {
 
 // Render property
 function renderProperty(property) {
-    // Price
+    // Price with property type
     const mainPrice = property.pricing[0];
-    propertyPrice.textContent = getText(mainPrice.price);
+    const priceText = getText(mainPrice.price);
+    const typeText = property.type ? getText(property.type) : '';
+    propertyPrice.textContent = typeText ? `${priceText} - ${typeText}` : priceText;
 
     // Location
     propertyLocation.textContent = getText(property.location);
     propertyLocation.href = property.mapsUrl || '#';
 
-    // Stats
+    // Stats (dynamic based on property)
+    const sizeText = property.size || '';
+    const distanceText = property.distance ? getText(property.distance) : '';
     propertyStats.innerHTML = `
         <div class="stat-item">
-            <div class="stat-value">1</div>
-            <div class="stat-label">${currentLang === 'it' ? 'ettaro' : 'hectare'}</div>
+            <div class="stat-value">${sizeText}</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">4</div>
-            <div class="stat-label">${currentLang === 'it' ? 'min dal mare' : 'min to sea'}</div>
+            <div class="stat-value">${distanceText}</div>
         </div>
     `;
 
