@@ -12,6 +12,21 @@ bd close <id>         # Complete work
 bd sync               # Sync with git
 ```
 
+## Worktree & PR Rules
+
+**CRITICAL: Never work directly on main.**
+
+1. **Always use worktrees** - All task/epic work MUST happen in a dedicated worktree:
+   ```bash
+   bd worktree <task-id>
+   ```
+2. **Always create PRs** - Never commit directly to main. Create a branch, push, and open a PR.
+3. **Stay in your worktree** - Never leave or switch worktrees unless explicitly asked or switching to another task's existing worktree.
+4. **Label tasks with PR URL** - After creating a PR, add the URL as a label:
+   ```bash
+   bd update <task-id> --label "https://github.com/..."
+   ```
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
@@ -35,6 +50,15 @@ bd sync               # Sync with git
    ```bash
    bd worktree remove <task-id>  # or: git worktree remove <path>
    ```
+
+## GitHub CLI
+
+**IMPORTANT:** Before using `gh` commands, unset the GITHUB_TOKEN environment variable:
+```bash
+unset GITHUB_TOKEN && gh pr create ...
+unset GITHUB_TOKEN && gh pr merge ...
+```
+This avoids conflicts with invalid tokens and lets gh use keyring credentials.
 
 **CRITICAL RULES:**
 - Work is NOT complete until `git push` succeeds
