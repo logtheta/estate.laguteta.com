@@ -35,15 +35,15 @@ Sul terreno è annessa una spaziosa casa con garage, che può essere acquistata 
         pricing: [
             {
                 label: { en: 'Land only', it: 'Solo terreno' },
-                price: '€120,000'
+                price: { en: '€120,000', it: '€120.000' }
             },
             {
                 label: { en: 'House + Garage', it: 'Casa + Garage' },
-                price: '€100,000'
+                price: { en: '€100,000', it: '€100.000' }
             },
             {
                 label: { en: 'Complete package', it: 'Pacchetto completo' },
-                price: { en: 'Negotiable', it: 'Trattabile' }
+                price: { en: '€200,000 Negotiable', it: '€200.000 Trattabile' }
             }
         ],
         features: [
@@ -79,8 +79,62 @@ Sul terreno è annessa una spaziosa casa con garage, che può essere acquistata 
             { type: 'image', src: 'images/giardino/IMG_0281 Large.jpeg' },
             { type: 'image', src: 'images/giardino/IMG_0282 Large.jpeg' }
         ],
+    },
+    {
+        id: 'bivio',
+        name: {
+            en: 'Bivio',
+            it: 'Bivio'
+        },
+        type: {
+            en: 'Ruin with Land',
+            it: 'Rudere con Terreno'
+        },
+        location: {
+            en: 'Contrada Fiumarella, Brancaleone (RC), Calabria, Italy',
+            it: 'Contrada Fiumarella, Brancaleone (RC), Calabria, Italia'
+        },
+        mapsUrl: 'https://www.google.com/maps?q=37.98885382214585,16.086520101759852',
+        size: '718 sqm',
+        distance: {
+            en: '5 min from the sea',
+            it: '5 min dal mare'
+        },
+        description: {
+            en: `Unique opportunity: land just 5 minutes from the sea!
+
+For sale: approximately 718 sqm plot with a ruin to renovate, situated in a peaceful, nature-filled area—ideal for those seeking relaxation and privacy. The plot has direct access from the main road (Contrada Fiumarella) and benefits from a strategic location: only 3.2 km from the sea.
+
+Here, you'll find tranquility, beautiful green surroundings, and the perfect place to build your dream home or a holiday retreat near the coast. The existing ruin is a rare opportunity for buyers to design and add value to the property exactly as they wish.
+
+Great investment or second-home opportunity, especially for international buyers: living near the Italian sea means enjoying a high quality of life, mild climate, and strong real estate appreciation potential!`,
+            it: `Occasione unica: terreno a 5 minuti dal mare!
+
+Vendesi terreno di circa 718 mq con rudere da ristrutturare, situato in una zona tranquilla e immersa nella natura, perfetta per chi desidera relax e privacy. Il terreno è facilmente accessibile direttamente dalla strada principale (Contrada Fiumarella) e si trova in una posizione strategica: a soli 3,2 km dal mare.
+
+L'area offre pace, verde e la possibilità di realizzare la casa dei sogni o una seconda residenza vicino alla costa. La presenza di un rudere esistente rappresenta un'opportunità per personalizzare e valorizzare la proprietà secondo le proprie esigenze.
+
+Perfetto come investimento o punto di partenza per chi desidera trasferirsi o soggiornare in Italia, anche per acquirenti dall'estero: vivere vicino al mare in Italia vuol dire qualità della vita, clima mite e grande potenziale di rivalutazione immobiliare!`
+        },
+        pricing: [
+            {
+                label: { en: 'Land with ruin', it: 'Terreno con rudere' },
+                price: { en: '€35,000', it: '€35.000' }
+            }
+        ],
+        features: [
+            { icon: 'default', label: { en: '718 sqm Plot', it: 'Terreno 718 mq' } },
+            { icon: 'default', label: { en: 'Ruin to Renovate', it: 'Rudere da Ristrutturare' } },
+            { icon: 'default', label: { en: 'Road Access', it: 'Accesso Strada' } },
+            { icon: 'water', label: { en: '3.2 km to Sea', it: '3,2 km dal Mare' } }
+        ],
+        media: [
+            { type: 'image', src: 'images/bivio/main.png' },
+            { type: 'image', src: 'images/bivio/1.png' },
+            { type: 'image', src: 'images/bivio/2.jpg' },
+            { type: 'image', src: 'images/bivio/3.jpg' }
+        ],
     }
-    // Add more properties here following the same structure
 ];
 
 // UI translations
