@@ -91,9 +91,11 @@ function selectProperty(propertyId) {
 
 // Render property
 function renderProperty(property) {
-    // Price
+    // Price with property type
     const mainPrice = property.pricing[0];
-    propertyPrice.textContent = getText(mainPrice.price);
+    const priceText = getText(mainPrice.price);
+    const typeText = property.type ? getText(property.type) : '';
+    propertyPrice.textContent = typeText ? `${priceText} - ${typeText}` : priceText;
 
     // Location
     propertyLocation.textContent = getText(property.location);

@@ -6,6 +6,10 @@ const PROPERTIES = [
             en: 'Il Giardino',
             it: 'Il Giardino'
         },
+        type: {
+            en: 'Citrus Grove',
+            it: 'Agrumeto'
+        },
         location: {
             en: 'Bruzzano Zeffirio (RC), Calabria, Italy',
             it: 'Bruzzano Zeffirio (RC), Calabria, Italia'
