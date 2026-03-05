@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://estate.laguteta.com/sitemap.xml

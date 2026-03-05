@@ -91,10 +91,21 @@ function selectProperty(propertyId) {
 
 // Render property
 function renderProperty(property) {
+    // Update page title and meta for SEO
+    const propName = getText(property.name);
+    const propType = property.type ? getText(property.type) : '';
+    const propLocation = getText(property.location);
+    document.title = `${propName} - ${propType} in ${propLocation} | Estate Laguteta`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        const descSnippet = getText(property.description).substring(0, 155).replace(/\n/g, ' ');
+        metaDesc.setAttribute('content', descSnippet);
+    }
+
     // Price with property type
     const mainPrice = property.pricing[0];
     const priceText = getText(mainPrice.price);
-    const typeText = property.type ? getText(property.type) : '';
+    const typeText = propType;
     propertyPrice.textContent = typeText ? `${priceText} - ${typeText}` : priceText;
 
     // Location
@@ -161,6 +172,7 @@ function renderGallery(property) {
     const media = property.media;
 
     // Main image
+    const altBase = `${getText(property.name)} - ${getText(property.type)} in ${getText(property.location)}`;
     if (media[0]) {
         if (media[0].type === 'video') {
             mainImage.style.display = 'none';
@@ -170,13 +182,14 @@ function renderGallery(property) {
             mainVideo.style.display = 'none';
             mainImage.style.display = 'block';
             mainImage.src = media[0].src;
+            mainImage.alt = altBase;
         }
     }
 
     // Side images (show 4 in a 2x2 grid)
     gallerySideImages.innerHTML = media.slice(1, 5).map((item, i) => `
         <div class="gallery-side-image" data-index="${i + 1}">
-            <img src="${item.type === 'video' ? (item.poster || '') : item.src}" alt="Property image ${i + 2}">
+            <img src="${item.type === 'video' ? (item.poster || '') : item.src}" alt="${altBase} - photo ${i + 2}">
         </div>
     `).join('');
 
@@ -261,6 +274,7 @@ function showLightboxMedia(index) {
         lightboxVideo.pause();
         lightboxImage.style.display = 'block';
         lightboxImage.src = media.src;
+        lightboxImage.alt = `${getText(currentProperty.name)} - photo ${index + 1}`;
     }
 
     lightboxThumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, i) => {
