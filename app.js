@@ -69,8 +69,8 @@ function updateLanguage(lang) {
 
 // Tabs
 function renderPropertyTabs() {
-    propertyTabs.innerHTML = PROPERTIES.map(prop => `
-        <button class="property-tab" data-property="${prop.id}">${getText(prop.name)}</button>
+    propertyTabs.innerHTML = PROPERTIES.map((prop, i) => `
+        <button class="property-tab" data-property="${prop.id}" role="tab" aria-selected="${i === 0}">${getText(prop.name)}</button>
     `).join('');
     propertyTabs.querySelectorAll('.property-tab').forEach(tab => {
         tab.addEventListener('click', () => selectProperty(tab.dataset.property));
@@ -81,7 +81,9 @@ function selectProperty(propertyId) {
     currentProperty = PROPERTIES.find(p => p.id === propertyId);
     if (!currentProperty) return;
     document.querySelectorAll('.property-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.property === propertyId);
+        const isActive = tab.dataset.property === propertyId;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', isActive);
         const prop = PROPERTIES.find(p => p.id === tab.dataset.property);
         if (prop) tab.textContent = getText(prop.name);
     });
@@ -189,7 +191,7 @@ function renderGallery(property) {
     // Side images (show 4 in a 2x2 grid)
     gallerySideImages.innerHTML = media.slice(1, 5).map((item, i) => `
         <div class="gallery-side-image" data-index="${i + 1}">
-            <img src="${item.type === 'video' ? (item.poster || '') : item.src}" alt="${altBase} - photo ${i + 2}">
+            <img src="${item.type === 'video' ? (item.poster || '') : item.src}" alt="${altBase} - photo ${i + 2}" loading="lazy">
         </div>
     `).join('');
 
@@ -221,6 +223,21 @@ function setupLightbox() {
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
         if (e.key === 'ArrowRight') navigateLightbox(1);
     });
+    // Focus trap
+    lightbox.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        const focusable = lightbox.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
     // Touch swipe support
     let touchStartX = 0;
     let touchEndX = 0;
@@ -237,19 +254,24 @@ function setupLightbox() {
     }, { passive: true });
 }
 
+let previouslyFocused = null;
+
 function openLightbox(index) {
     if (!currentProperty) return;
+    previouslyFocused = document.activeElement;
     currentMediaIndex = index;
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
     renderLightboxThumbs();
     showLightboxMedia(index);
+    lightboxClose.focus();
 }
 
 function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     lightboxVideo.pause();
+    if (previouslyFocused) previouslyFocused.focus();
 }
 
 function navigateLightbox(dir) {
@@ -285,8 +307,9 @@ function showLightboxMedia(index) {
 function renderLightboxThumbs() {
     lightboxThumbs.innerHTML = currentProperty.media.map((item, i) => {
         const src = item.type === 'video' ? (item.poster || item.src) : item.src;
+        const altText = `${getText(currentProperty.name)} - thumbnail ${i + 1}`;
         return `<div class="lightbox-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
-            <img src="${src}" alt="">
+            <img src="${src}" alt="${altText}" loading="lazy">
         </div>`;
     }).join('');
 

@@ -262,6 +262,7 @@ header nav {
     flex: 1;
 }
 
+h1.property-price,
 .property-price {
     font-size: 32px;
     font-weight: 700;
