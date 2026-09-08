@@ -56,7 +56,15 @@ const DEFAULT_STATE = {
   qualifiesForExclusion: true,
   useCaliforniaTax: true,
   costs: [
-    { id: createId(), description: "Improvements", cost: 53000, basis: true },
+    { id: createId(), description: "A/C", cost: 11000, basis: true },
+    { id: createId(), description: "Kitchen remodeling", cost: 11000, basis: true },
+    { id: createId(), description: "Pool removal", cost: 22000, basis: true },
+    { id: createId(), description: "Patio", cost: 2000, basis: true },
+    { id: createId(), description: "A/C tune-up", cost: 2000, basis: false },
+    { id: createId(), description: "Roof", cost: 17300, basis: true },
+    { id: createId(), description: "Siding", cost: 9000, basis: true },
+    { id: createId(), description: "Paint in/out", cost: 11000, basis: false },
+    { id: createId(), description: "Front/back yard", cost: 8500, basis: true },
   ],
 };
 
