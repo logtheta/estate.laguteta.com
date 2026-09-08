@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>House Sale Net Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="masthead">
+        <div>
+          <p class="eyebrow">California home sale estimate</p>
+          <h1>House Sale Net Calculator</h1>
+          <p class="version-note">Scenario defaults updated: purchase $1.1M, payoff $320k, improvements $53k.</p>
+        </div>
+        <div class="snapshot" aria-label="Estimated net profit summary">
+          <span>Net profit after ownership</span>
+          <strong id="heroNet">$0</strong>
+          <small id="heroProfit">Cash to you after sale: $0</small>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Main results">
+        <article class="metric metric-primary">
+          <span>Cash to you after sale</span>
+          <strong id="netCash">$0</strong>
+        </article>
+        <article class="metric">
+          <span>Taxable gain</span>
+          <strong id="taxableGain">$0</strong>
+        </article>
+        <article class="metric">
+          <span>Estimated tax</span>
+          <strong id="totalTax">$0</strong>
+        </article>
+        <article class="metric">
+          <span>Total ownership cost</span>
+          <strong id="ownershipCost">$0</strong>
+        </article>
+      </section>
+
+      <div class="workspace">
+        <section class="panel input-panel">
+          <div class="panel-heading">
+            <h2>Inputs</h2>
+            <button class="ghost-button" id="resetButton" type="button">Reset</button>
+          </div>
+
+          <div class="field-grid">
+            <label class="selling-price-field">
+              <span class="label-with-badge">
+                Selling price
+                <small id="salePriceLift">0% vs purchase</small>
+              </span>
+              <input data-field="sellingPrice" inputmode="decimal" type="text" />
+              <div class="exclusion-gauge" id="exclusionGauge">
+                <div
+                  class="exclusion-track"
+                  id="exclusionTrack"
+                  role="progressbar"
+                  aria-label="Primary residence gain exclusion used"
+                  aria-valuemin="0"
+                  aria-valuemax="500000"
+                  aria-valuenow="0"
+                >
+                  <span id="exclusionFill"></span>
+                </div>
+                <strong id="exclusionTargetPrice">$0</strong>
+              </div>
+            </label>
+            <label>
+              <span>Purchase price</span>
+              <input data-field="purchasePrice" inputmode="decimal" type="text" />
+            </label>
+            <label>
+              <span>Original down payment</span>
+              <input data-field="downPayment" inputmode="decimal" type="text" />
+            </label>
+            <label>
+              <span>Seller realtor fee</span>
+              <div class="with-suffix">
+                <input data-field="sellerRealtorPct" inputmode="decimal" type="text" />
+                <span>%</span>
+              </div>
+            </label>
+            <label>
+              <span>Buyer realtor fee</span>
+              <div class="with-suffix">
+                <input data-field="buyerRealtorPct" inputmode="decimal" type="text" />
+                <span>%</span>
+              </div>
+            </label>
+            <label>
+              <span>Mortgage payoff</span>
+              <input data-field="mortgagePayoff" inputmode="decimal" type="text" />
+            </label>
+            <label>
+              <span>Closing costs</span>
+              <input data-field="closingCosts" inputmode="decimal" type="text" />
+            </label>
+            <label>
+              <span>Other taxable/MAGI income</span>
+              <input data-field="otherIncome" inputmode="decimal" type="text" />
+            </label>
+            <label>
+              <span>Filing status</span>
+              <select data-field="filingStatus">
+                <option value="married">Married/RDP filing jointly</option>
+                <option value="single">Single</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="subsection">
+            <div class="section-copy">
+              <h2>Ownership Period</h2>
+              <p>
+                The monthly payment is treated as the all-in cash you paid while
+                owning the home. Property tax and insurance split that total for
+                visibility.
+              </p>
+            </div>
+            <div class="field-grid">
+              <label>
+                <span>Purchase month</span>
+                <input data-field="purchaseMonth" type="month" />
+              </label>
+              <label>
+                <span>Likely sale month</span>
+                <input data-field="saleMonth" type="month" />
+              </label>
+              <label>
+                <span>Monthly payment</span>
+                <input data-field="monthlyHousingPayment" inputmode="decimal" type="text" />
+              </label>
+              <label>
+                <span>Annual property tax</span>
+                <input data-field="annualPropertyTax" inputmode="decimal" type="text" />
+              </label>
+              <label>
+                <span>Annual insurance</span>
+                <input data-field="annualInsurance" inputmode="decimal" type="text" />
+              </label>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <label class="toggle">
+              <input data-field="qualifiesForExclusion" type="checkbox" />
+              <span>Qualifies for primary residence exclusion</span>
+            </label>
+            <label class="toggle">
+              <input data-field="useCaliforniaTax" type="checkbox" />
+              <span>Estimate California tax</span>
+            </label>
+          </div>
+
+          <div class="costs-header">
+            <div>
+              <h2>Improvements</h2>
+              <p>
+                Check “Include in adjusted cost basis” for qualifying capital
+                improvements. Leave routine repairs, such as standalone painting,
+                unchecked.
+              </p>
+            </div>
+            <button class="primary-button" id="addCostButton" type="button">Add improvement</button>
+          </div>
+
+          <div class="cost-list" id="costList" aria-live="polite"></div>
+        </section>
+
+        <section class="panel results-panel">
+          <div class="panel-heading">
+            <h2>Breakdown</h2>
+            <span id="savedState">Saved</span>
+          </div>
+
+          <div class="bar-stack" id="barStack" aria-label="Sale proceeds allocation"></div>
+
+          <dl class="breakdown">
+            <div><dt>Raw gain</dt><dd id="rawGain">$0</dd></div>
+            <div class="breakdown-heading"><dt>Ownership costs</dt><dd></dd></div>
+            <div><dt>Holding period</dt><dd id="holdingPeriod">0 months</dd></div>
+            <div class="parent-row"><dt>Total monthly payments</dt><dd id="totalMonthlyPayments">$0</dd></div>
+            <div class="child-row"><dt>Property tax</dt><dd id="propertyTaxPaid">$0</dd></div>
+            <div class="child-row"><dt>Insurance</dt><dd id="insurancePaid">$0</dd></div>
+            <div class="child-row"><dt>Principal + interest</dt><dd id="mortgagePaymentPortion">$0</dd></div>
+            <div><dt>All improvement spending</dt><dd id="allTrackedCosts">$0</dd></div>
+            <div class="parent-row"><dt>Total ownership cost</dt><dd id="totalOwnershipCost">$0</dd></div>
+
+            <div class="breakdown-heading"><dt>Selling costs</dt><dd></dd></div>
+            <div><dt>Seller realtor commission</dt><dd id="sellerRealtorFee">$0</dd></div>
+            <div><dt>Buyer realtor commission</dt><dd id="buyerRealtorFee">$0</dd></div>
+            <div><dt>Total realtor fees (seller + buyer)</dt><dd id="realtorFees">$0</dd></div>
+            <div><dt>Closing costs</dt><dd id="closingCosts">$0</dd></div>
+            <div class="parent-row"><dt>Total selling expenses (realtor + closing)</dt><dd id="sellingExpenses">$0</dd></div>
+
+            <div class="breakdown-heading"><dt>Taxable gain</dt><dd></dd></div>
+            <div><dt>Checked cost-basis improvements</dt><dd id="basisCosts">$0</dd></div>
+            <div><dt>Adjusted basis</dt><dd id="adjustedBasis">$0</dd></div>
+            <div class="formula-row"><dt>Adjusted basis formula</dt><dd id="adjustedBasisFormula"></dd></div>
+            <div><dt>Amount realized</dt><dd id="amountRealized">$0</dd></div>
+            <div class="formula-row"><dt>Amount realized formula</dt><dd id="amountRealizedFormula"></dd></div>
+            <div><dt>Gain before exclusion</dt><dd id="gainBeforeExclusion">$0</dd></div>
+            <div class="formula-row"><dt>Gain formula</dt><dd id="gainBeforeExclusionFormula"></dd></div>
+            <div><dt>Exclusion applied</dt><dd id="exclusionApplied">$0</dd></div>
+            <div class="formula-row"><dt>Taxable gain formula</dt><dd id="taxableGainFormula"></dd></div>
+            <div class="parent-row"><dt>Taxable gain after exclusion</dt><dd id="taxableGainDetail">$0</dd></div>
+
+            <div class="breakdown-heading"><dt>Taxes and cash</dt><dd></dd></div>
+            <div><dt>Federal LTCG tax</dt><dd id="federalTax">$0</dd></div>
+            <div><dt>Federal NIIT</dt><dd id="niitTax">$0</dd></div>
+            <div><dt>California tax</dt><dd id="californiaTax">$0</dd></div>
+            <div><dt>Mortgage payoff to bank</dt><dd id="mortgagePayoff">$0</dd></div>
+            <div><dt>Cash before tax</dt><dd id="cashBeforeTax">$0</dd></div>
+            <div class="formula-row"><dt>Cash formula</dt><dd id="netCashFormula"></dd></div>
+            <div class="parent-row"><dt>Cash to you after sale</dt><dd id="netCashDetail">$0</dd></div>
+
+            <div class="breakdown-heading"><dt>Net profit formula</dt><dd></dd></div>
+            <div><dt>Down payment</dt><dd id="downPayment">$0</dd></div>
+            <div><dt>Total cash invested</dt><dd id="totalCashInvested">$0</dd></div>
+            <div class="formula-row"><dt>Net profit formula</dt><dd id="economicProfitFormula"></dd></div>
+            <div class="parent-row"><dt>Net profit after ownership</dt><dd id="economicProfitDetail">$0</dd></div>
+          </dl>
+
+          <details class="notes" open>
+            <summary>Tax assumptions</summary>
+            <p>
+              Uses 2026 federal long-term capital gain thresholds, a 3.8% NIIT
+              threshold, and the latest FTB-published 2025 California rate
+              schedule available in this build. California treats taxable capital
+              gains as ordinary income. The app assumes the home was held
+              long-term. Mortgage payments, property tax, and insurance affect
+              net profit after ownership, not capital-gain basis.
+              Net profit after ownership subtracts down payment and ownership
+              costs from the cash left after the sale closes. Mortgage payoff is
+              already subtracted in the cash-to-you formula.
+              It does not handle depreciation recapture, partial exclusions, AMT,
+              escrow prorations, SALT limits, or exact itemized deduction effects.
+            </p>
+          </details>
+        </section>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
