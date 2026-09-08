@@ -65,6 +65,7 @@ const DEFAULT_STATE = {
     { id: createId(), description: "Siding", cost: 9000, basis: true },
     { id: createId(), description: "Paint in/out", cost: 11000, basis: false },
     { id: createId(), description: "Front/back yard", cost: 8500, basis: true },
+    { id: createId(), description: "New door + installation", cost: 2000, basis: true },
   ],
 };
 
